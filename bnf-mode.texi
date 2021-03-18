@@ -8,18 +8,28 @@
 @c %**end of header
 
 @copying
+@ifnottex
+BNF Mode is a GNU Emacs major mode for editing BNF grammars.
+Presently it provides basic syntax and font-locking for BNF files.
+BNF notation is supported exactly form as it was first announced in
+the ALGOL 60 report.
+
+@noindent
+This manual is for BNF Mode version 0.4.5.
+@end ifnottex
+
+Copyright @copyright{} 2019-2020 Free Software Foundation, Inc.
+
 @quotation
-Copyright @copyright{} 2019, 2020 Free Software Foundation, Inc.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being “A GNU Manual,”
+and with the Back-Cover Texts as in (a) below. A copy of the license
+is included in the section entitled “GNU Free Documentation License.”
 
-You can redistribute this document and/or modify it under the terms of
-the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any
-later version.
-
-This document is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE@.  See the GNU
-General Public License for more details.
+(a) The FSF's Back-Cover Text is: “You have the freedom to copy and
+modify this GNU manual.”
 @end quotation
 @end copying
 
@@ -31,7 +41,7 @@ General Public License for more details.
 @finalout
 @titlepage
 @title BNF Mode User Manual
-@subtitle for version 0.4.4
+@subtitle for version 0.4.5
 @author Serghei Iakovlev
 @page
 @vskip 0pt plus 1filll
@@ -43,16 +53,6 @@ General Public License for more details.
 @ifnottex
 @node Top
 @top BNF Mode User Manual
-
-BNF Mode is a GNU Emacs major mode for editing BNF grammars.
-Currently this mode provides basic syntax and font-locking for BNF
-files.  BNF notation is supported exactly form as it was first
-announced in the ALGOL 60 report.
-
-@noindent
-This manual is for BNF Mode version 0.4.4.
-
-@insertcopying
 @end ifnottex
 
 @menu
@@ -88,9 +88,39 @@ Project Links
 @chapter Introduction
 
 BNF Mode is a GNU Emacs major mode for editing BNF grammars.
-Currently this mode provides basic syntax and font-locking for BNF
-files.  BNF notation is supported exactly form as it was first
-announced in the ALGOL 60 report.
+Presently it provides basic syntax and font-locking for BNF files.
+BNF notation is supported exactly form as it was first announced in
+the ALGOL 60 report.
+
+Bellow canonical BNF notation represented with a BNF is presented.  The syntax of the BNF has been carefully copied from Revised ALGOL 60 report.  For more see @url{http://www.masswerk.at/algol60/report.htm}.
+
+@example
+<syntax>         ::= <rule> | <rule> <syntax>
+<rule>           ::= <opt-ws> < <rule-name> > <opt-ws>
+                     ::= <opt-ws> <expression> <line-end>
+<opt-ws>         ::= <space> <opt-ws> | <empty>
+<expression>     ::= <list> | <list> <opt-ws> <or> <opt-ws>
+                     <expression>
+<line-end>       ::= <opt-ws> <EOL> | <line-end> <line-end>
+<list>           ::= <term> | <term> <opt-ws> <list>
+<term>           ::= <literal> | < <rule-name> >
+<literal>        ::= <character> <text>
+<character>      ::= <letter> | <digit> | <symbol>
+<letter>         ::= A | B | C | D | E | F | G | H | I | J | K | L |
+                     M | N | O | P | Q | R | S | T | U | V | W | X |
+                     Y | Z | a | b | c | d | e | f | g | h | i | j |
+                     k | l | m | n | o | p | q | r | s | t | u | v |
+                     w | x | y | z
+<digit>          ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+<symbol>         ::= <or>  | <space>   | ! | # | $ | % | & | ( | ) |
+                     * | + | @comma{} | - | . | / | : | ~ | > | = | < | ? |
+                     @atchar{} | [ | @backslashchar{} | ] | ^ | _ | ` | ' | " | @{ | @} | ;
+<rule-name>      ::= <letter> | <rule-name> <rule-char>
+<rule-char>      ::= <letter> | <digit> | -
+<space>          ::= <space, tab or new line character>
+<or>             ::= |
+<empty>          ::=
+@end example
 
 @node Installation
 @chapter Installation
@@ -126,8 +156,6 @@ To use Elpa:
 
 @lisp
 (require 'package)
-(add-to-list 'package-archives
-             '("gnu" . "https://elpa.gnu.org/packages/") t)
 (package-initialize)
 @end lisp
 
@@ -140,7 +168,7 @@ For those who want only formal, tagged releases use Melpa Stable:
 @lisp
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 @end lisp
 
@@ -152,7 +180,7 @@ For those who want rolling releases as they happen use Melpa:
 @lisp
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 @end lisp
 
@@ -271,29 +299,18 @@ current buffer use @kbd{M-x} @code{bnf-mode} @kbd{RET}.
 @chapter Customizing
 
 @cindex Customizing
-@vindex bnf-mode-algol-comments-style
 
-There are not so much customize options yet.  The most interested
-option is @code{bnf-mode-algol-comments-style}.  Setting it to non-nil
-means use for BNF comments style introduced in ALGOL 60.  The
-following "comment" conventions will hold:
+There are not so much customization options yet.
 
-@multitable @columnfractions .7 .3
-@headitem The sequence of basic symbols @tab Is equivalent to
-@item @code{; comment <any sequence not containing ;>;}
-@tab @code{;}
-@item @code{begin comment <any sequence not containing ;>;}
-@tab @code{begin}
-@end multitable
+To customize @code{abbrev-mode} for @code{bnf-mode}, simple add preffered
+abbreviations to @code{bnf-mode-abbrev-table}.
 
-@*Enabling this feature will disable comments recognition which use
-semicolon only (@code{;}).
-
-@*To customize BNF Mode options, use command as follows:
-
-@example
-M-x customize-group bnf RET
-@end example
+If you want, you can go without any customizations at all. The above
+settings are the most bang for the buck in terms of customization.  So
+users that typically don't like customize a lot are advised to look at
+these settings first.  To customize BNF Mode options using textual GUI
+system, use the following command: @kbd{M-x} @code{customize-group}
+@kbd{RET} @code{bnf} @kbd{RET}.
 
 @node Project Links
 @chapter Project Links

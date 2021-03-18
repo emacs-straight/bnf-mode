@@ -1,4 +1,4 @@
-# Copyright (C) 2019, 2020 Free Software Foundation, Inc.
+# Copyright (C) 2019-2020 Free Software Foundation, Inc.
 #
 # License
 #
@@ -16,8 +16,6 @@
 # along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 include default.mk
-
-.DEFAULT_GOAL = build
 
 %.info: %.texi
 	$(info Generating $@)
@@ -55,7 +53,7 @@ $(ARCHIVE_NAME).tar: $(ARCHIVE_CONTENTS)
 
 .PHONY: .title
 .title:
-	$(info BNF Mode $(VERSION))
+	@echo "BNF Mode $(VERSION)"
 
 .PHONY: init
 init: Cask
@@ -63,14 +61,15 @@ init: Cask
 
 .PHONY: checkdoc
 checkdoc:
-	$(EMACSBATCH) --eval '(checkdoc-file "$(SRCS)")'
+	@$(EMACSBATCH) --eval '(checkdoc-file "$(SRCS)")'
+	$(info Done.)
 
 .PHONY: build
 build: $(OBJS)
 
 .PHONY: test
 test:
-	@$(CASK) exec ert-runner $(TESTFLAGS)
+	@$(CASK) exec buttercup $(TESTFLAGS)
 
 .PHONY: clean
 clean:
@@ -113,5 +112,5 @@ help: .title
 	@echo '  $(CASK): $(if $(HAVE_CASK),yes,no)'
 	@echo ''
 	@echo 'You need $(CASK) to develop BNF Mode.'
-	@echo 'See http://cask.readthedocs.io/ for more.'
+	@echo 'See https://cask.readthedocs.io/ for more.'
 	@echo ''

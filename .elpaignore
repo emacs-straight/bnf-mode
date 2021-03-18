@@ -1,7 +1,7 @@
 .codecov.yml
 .dir-locals.el
 .elpaignore
-.ert-runner
+.gitattributes
 .github
 .gitignore
 Cask

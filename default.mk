@@ -1,4 +1,4 @@
-# Copyright (C) 2019, 2020 Free Software Foundation, Inc.
+# Copyright (C) 2019-2020 Free Software Foundation, Inc.
 #
 # License
 #
@@ -17,6 +17,9 @@
 
 TOP := $(dir $(lastword $(MAKEFILE_LIST)))
 
+# Run “make build” by default
+.DEFAULT_GOAL = build
+
 EMACS  ?= emacs
 CASK   ?= cask
 PANDOC ?= pandoc
@@ -25,9 +28,17 @@ TAR    ?= tar
 INSTALL_INFO ?= $(shell command -v ginstall-info || printf install-info)
 MAKEINFO     ?= makeinfo
 
+EMACSFLAGS ?=
+TESTFLAGS  ?= -L .
+PANDOCLAGS ?= --fail-if-warnings \
+	--reference-links \
+	--atx-headers \
+	-f org+empty_paragraphs
+
 EMACSBATCH = $(EMACS) -Q --batch -L . $(EMACSFLAGS)
 RUNEMACS   =
 
+# Program availability
 HAVE_CASK := $(shell sh -c "command -v $(CASK)")
 ifndef HAVE_CASK
 $(warning "$(CASK) is not available.  Please run make help")
@@ -36,18 +47,12 @@ else
 RUNEMACS = $(CASK) exec $(EMACSBATCH)
 endif
 
-EMACSFLAGS ?=
-TESTFLAGS  ?= --reporter ert+duration
-PANDOCLAGS ?= --fail-if-warnings \
-	--reference-links \
-	--atx-headers \
-	-f org+empty_paragraphs
+VERSION="$(shell sed -nre '/^;; Version:/ { s/^;; Version:[ \t]+//; p }' bnf-mode.el)"
 
 PACKAGE = bnf-mode
 ARCHIVE_NAME = $(PACKAGE)-$(VERSION)
 
-VERSION = 0.4.4
-
+# File lists
 SRCS = bnf-mode.el
 OBJS = $(SRCS:.el=.elc)
 
