@@ -1,9 +1,16 @@
 bnf-mode NEWS -- history of user-visible changes.
 
-Copyright (C) 2019-2020 Free Software Foundation, Inc.
+Copyright (C) 2019-2022 Free Software Foundation, Inc.
 See the end of the file for license conditions.
 
 This file is about changes in BNF Mode.
+
+* BNF Mode 0.5.0
+** GNU Emacs < 25.1 is no longer supported.
+Due to difficulties in setting up the environment and test automation, the
+version of GNU Emacs older than 25.1 is no longer officially supported. BNF Mode
+may still work with older versions of GNU Emacs, like 24.3, or with other
+flavors of Emacs (e.g. XEmacs) but this is not guaranteed anymore.
 
 * BNF Mode 0.4.5
 ** Tests were migrated from ert-runner to buttercup.

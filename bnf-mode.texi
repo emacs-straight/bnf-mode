@@ -18,7 +18,7 @@ the ALGOL 60 report.
 This manual is for BNF Mode version 0.4.5.
 @end ifnottex
 
-Copyright @copyright{} 2019-2020 Free Software Foundation, Inc.
+Copyright @copyright{} 2019-2022 Free Software Foundation, Inc.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -127,7 +127,7 @@ Bellow canonical BNF notation represented with a BNF is presented.  The syntax o
 
 @cindex Installation
 
-BNF Mode known to work with GNU Emacs 24.3 and later.  BNF Mode may
+BNF Mode known to work with GNU Emacs 25.1 and later.  BNF Mode may
 work with older versions of Emacs, or with other flavors of Emacs
 (e.g. XEmacs) but this is @i{not} guaranteed.  Bug reports for problems
 related to using BNF Mode with older versions of Emacs will most like
